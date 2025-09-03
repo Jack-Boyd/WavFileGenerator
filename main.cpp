@@ -24,14 +24,14 @@ struct WavHeader {
   uint32_t sub_chunk2_size;
 };
 
-bool read_wav_file(const std::string &fname, WavHeader &header, std::vector<int16_t> &audio_data) {
+bool read_wav_file(const std::string& fname, WavHeader& header, std::vector<int16_t>& audio_data) {
   std::ifstream wavfile(fname, std::ios::binary);
   if (!wavfile.is_open()) {
     std::cerr << "Error: Could not open file " << fname << std::endl;
     return false;
   }
 
-  wavfile.read(reinterpret_cast<char *>(&header), sizeof(WavHeader));
+  wavfile.read(reinterpret_cast<char*>(&header), sizeof(WavHeader));
 
   if (std::string(header.format, 4) != "WAVE" || std::string(header.chunk_ID, 4) != "RIFF") {
     std::cerr << "Error: Not a valid WAVE/RIFF file!" << std::endl;
@@ -45,12 +45,12 @@ bool read_wav_file(const std::string &fname, WavHeader &header, std::vector<int1
   std::cout << "Bits Per Sample: " << header.bits_per_sample << " bits" << std::endl;
 
   audio_data.resize(header.sub_chunk2_size / sizeof(int16_t));
-  wavfile.read(reinterpret_cast<char *>(audio_data.data()), header.sub_chunk2_size);
+  wavfile.read(reinterpret_cast<char*>(audio_data.data()), header.sub_chunk2_size);
 
   return true;
 }
 
-bool write_wav_file(const std::string &fname, const WavHeader &header, const std::vector<int16_t> &audio_data) {
+bool write_wav_file(const std::string& fname, const WavHeader& header, const std::vector<int16_t>& audio_data) {
   std::ofstream wavfile(fname, std::ios::binary);
   if (!wavfile.is_open()) {
     std::cerr << "Error: Could not create file " << fname << std::endl;
